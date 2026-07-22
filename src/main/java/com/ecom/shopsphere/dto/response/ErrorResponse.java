@@ -5,12 +5,14 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Getter
-@Builder
-@AllArgsConstructor
+@Setter
 @NoArgsConstructor
-public class ErrorResponse {
+@AllArgsConstructor
+@Builder
+public class ErrorResponse<T> {
 
-    private LocalDateTime timestamp;
+    @Builder.Default
+    private LocalDateTime timestamp = LocalDateTime.now();
 
     private int status;
 
@@ -19,4 +21,6 @@ public class ErrorResponse {
     private String message;
 
     private String path;
+
+    private T data;
 }
