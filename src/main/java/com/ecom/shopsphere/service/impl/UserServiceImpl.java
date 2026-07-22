@@ -9,6 +9,7 @@ import com.ecom.shopsphere.entity.User;
 import com.ecom.shopsphere.exception.EmailAlreadyExistsException;
 import com.ecom.shopsphere.exception.InvalidCredentialsException;
 import com.ecom.shopsphere.repository.UserRepository;
+import com.ecom.shopsphere.security.JwtService;
 import com.ecom.shopsphere.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final JwtService jwtService;
 
     @Override
     public RegisterResponseDTO registerUser(RegisterRequestDTO request) {
@@ -63,7 +66,6 @@ public class UserServiceImpl implements UserService {
                 .fullName(savedUser.getFullName())
                 .email(savedUser.getEmail())
                 .phoneNumber(savedUser.getPhoneNumber())
-                .message("Registration successful")
                 .build();
     }
     @Override
@@ -86,11 +88,15 @@ public class UserServiceImpl implements UserService {
 
         log.info("User logged in successfully: {}", user.getEmail());
 
+        String token = jwtService.generateToken(user.getEmail());
+
+        log.info("JWT token generated successfully for email: {}", user.getEmail());
+
         return LoginResponseDTO.builder()
                 .userId(user.getId())
                 .fullName(user.getFullName())
                 .email(user.getEmail())
-                .message("Login successful")
+                .token(token)
                 .build();
     }
 }

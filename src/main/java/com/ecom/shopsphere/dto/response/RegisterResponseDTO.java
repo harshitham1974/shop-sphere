@@ -17,6 +17,4 @@ public class RegisterResponseDTO {
 
     private String phoneNumber;
 
-    private String message;
-
 }
