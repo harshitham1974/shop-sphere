@@ -1,5 +1,6 @@
 package com.ecom.shopsphere.dto.response;
 
+import com.ecom.shopsphere.entity.Role;
 import lombok.*;
 
 @Getter
@@ -7,14 +8,14 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginResponseDTO {
-
+public class ProfileResponseDTO {
     private Long userId;
 
     private String fullName;
 
     private String email;
 
-    private String token;
+    private String phoneNumber;
 
+    private Role role;
 }

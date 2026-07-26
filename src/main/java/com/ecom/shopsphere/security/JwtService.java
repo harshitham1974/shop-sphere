@@ -4,7 +4,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +18,18 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private static final String SECRET =
-            "shopsphere-secret-key-shopsphere-secret-key-2026";
+    @Value("${jwt.secret}")
+    private String secret;
 
-    private static final SecretKey KEY =
-            Keys.hmacShaKeyFor(SECRET.getBytes());
+    @Value("${jwt.expiration}")
+    private long expiration;
 
-    private static final long EXPIRATION =
-            1000 * 60 * 60;
+    private SecretKey key;
+
+    @PostConstruct
+    public void init() {
+        key = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
     public String generateToken(String email) {
 
@@ -31,15 +38,15 @@ public class JwtService {
         return Jwts.builder()
                 .subject(email)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + EXPIRATION))
-                .signWith(KEY)
+                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(key)
                 .compact();
     }
 
     private Claims extractClaims(String token) {
 
         return Jwts.parser()
-                .verifyWith(KEY)
+                .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
