@@ -123,4 +123,25 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
 
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handleProductNotFound(
+            ProductNotFoundException ex,
+            HttpServletRequest request) {
+
+        log.error("Product not found: {}", ex.getMessage());
+
+        ErrorResponse<Map<String, String>> error =
+                ErrorResponse.<Map<String, String>>builder()
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                        .message("Product Fetch Failed")
+                        .path(request.getRequestURI())
+                        .data(Map.of("product", ex.getMessage()))
+                        .build();
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
 }
