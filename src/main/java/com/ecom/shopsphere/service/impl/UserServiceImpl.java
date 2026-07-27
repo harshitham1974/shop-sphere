@@ -212,7 +212,7 @@ public class UserServiceImpl implements UserService {
         log.info("Account deleted successfully for user: {}", user.getEmail());
 
         return DeleteAccountResponseDTO.builder()
-                .details("Your account has been deleted successfully.")
+                .state("DELETED")
                 .build();
     }
 }

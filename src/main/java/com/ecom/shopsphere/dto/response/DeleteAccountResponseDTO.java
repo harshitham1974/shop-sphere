@@ -9,5 +9,5 @@ import lombok.*;
 @Builder
 public class DeleteAccountResponseDTO {
 
-    private String details;
+    private String state;
 }
