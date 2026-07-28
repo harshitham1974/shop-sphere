@@ -19,7 +19,9 @@ public class ProductResponseDTO {
 
     private String brand;
 
-    private String category;
+    private Long categoryId;
+
+    private String categoryName;
 
     private BigDecimal price;
 

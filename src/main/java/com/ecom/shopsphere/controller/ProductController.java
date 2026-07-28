@@ -3,7 +3,6 @@ package com.ecom.shopsphere.controller;
 import com.ecom.shopsphere.dto.request.CreateProductRequestDTO;
 import com.ecom.shopsphere.dto.request.UpdateProductRequestDTO;
 import com.ecom.shopsphere.dto.response.ApiResponse;
-import com.ecom.shopsphere.dto.response.DeleteAccountResponseDTO;
 import com.ecom.shopsphere.dto.response.DeleteProductResponseDTO;
 import com.ecom.shopsphere.dto.response.ProductResponseDTO;
 import com.ecom.shopsphere.service.ProductService;

@@ -4,9 +4,12 @@ import com.ecom.shopsphere.dto.request.CreateProductRequestDTO;
 import com.ecom.shopsphere.dto.request.UpdateProductRequestDTO;
 import com.ecom.shopsphere.dto.response.DeleteProductResponseDTO;
 import com.ecom.shopsphere.dto.response.ProductResponseDTO;
+import com.ecom.shopsphere.entity.Category;
 import com.ecom.shopsphere.entity.Product;
+import com.ecom.shopsphere.exception.CategoryNotFoundException;
 import com.ecom.shopsphere.exception.ProductNotFoundException;
 import com.ecom.shopsphere.mapper.ProductMapper;
+import com.ecom.shopsphere.repository.CategoryRepository;
 import com.ecom.shopsphere.repository.ProductRepository;
 import com.ecom.shopsphere.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +27,23 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductMapper productMapper;
 
+    private final CategoryRepository categoryRepository;
+
     @Override
     public ProductResponseDTO createProduct(
             CreateProductRequestDTO request) {
 
         log.info("Starting product creation.");
 
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() ->
+                        new CategoryNotFoundException(
+                                "Category not found."));
+
         log.info("Mapping CreateProductRequestDTO to Product entity.");
 
         Product product =
-                productMapper.toEntity(request);
+                productMapper.toEntity(request, category);
 
         log.debug("Product entity created successfully.");
 
@@ -100,9 +110,12 @@ public class ProductServiceImpl implements ProductService {
                             "Product with ID " + productId + " does not exist.");
                 });
 
-        productMapper.updateProductFromRequest(
-                request,
-                product);
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() ->
+                        new CategoryNotFoundException(
+                                "Category not found."));
+
+        productMapper.updateProductFromRequest(request, product, category);
 
         Product updatedProduct =
                 productRepository.save(product);
