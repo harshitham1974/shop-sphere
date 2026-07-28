@@ -3,6 +3,7 @@ package com.ecom.shopsphere.mapper.impl;
 import com.ecom.shopsphere.dto.request.CreateProductRequestDTO;
 import com.ecom.shopsphere.dto.request.UpdateProductRequestDTO;
 import com.ecom.shopsphere.dto.response.ProductResponseDTO;
+import com.ecom.shopsphere.entity.Category;
 import com.ecom.shopsphere.entity.Product;
 import com.ecom.shopsphere.mapper.ProductMapper;
 import org.springframework.stereotype.Component;
@@ -11,13 +12,13 @@ import org.springframework.stereotype.Component;
 public class ProductMapperImpl implements ProductMapper {
 
     @Override
-    public Product toEntity(CreateProductRequestDTO request) {
+    public Product toEntity(CreateProductRequestDTO request, Category category) {
 
         return Product.builder()
                 .productName(request.getProductName())
                 .description(request.getDescription())
                 .brand(request.getBrand())
-                .category(request.getCategory())
+                .category(category)
                 .price(request.getPrice())
                 .stockQuantity(request.getStockQuantity())
                 .imageUrl(request.getImageUrl())
@@ -32,7 +33,8 @@ public class ProductMapperImpl implements ProductMapper {
                 .productName(product.getProductName())
                 .description(product.getDescription())
                 .brand(product.getBrand())
-                .category(product.getCategory())
+                .categoryId(product.getCategory().getCategoryId())
+                .categoryName(product.getCategory().getCategoryName())
                 .price(product.getPrice())
                 .stockQuantity(product.getStockQuantity())
                 .imageUrl(product.getImageUrl())
@@ -42,12 +44,12 @@ public class ProductMapperImpl implements ProductMapper {
     @Override
     public void updateProductFromRequest(
             UpdateProductRequestDTO request,
-            Product product) {
+            Product product, Category category) {
 
         product.setProductName(request.getProductName());
         product.setDescription(request.getDescription());
         product.setBrand(request.getBrand());
-        product.setCategory(request.getCategory());
+        product.setCategory(category);
         product.setPrice(request.getPrice());
         product.setStockQuantity(request.getStockQuantity());
         product.setImageUrl(request.getImageUrl());

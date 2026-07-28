@@ -134,7 +134,7 @@ public class GlobalExceptionHandler {
                 ErrorResponse.<Map<String, String>>builder()
                         .status(HttpStatus.NOT_FOUND.value())
                         .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-                        .message("Product Fetch Failed")
+                        .message("Product Not Found")
                         .path(request.getRequestURI())
                         .data(Map.of("product", ex.getMessage()))
                         .build();
@@ -142,6 +142,40 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(error);
+    }
+
+    @ExceptionHandler(CategoryAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handleCategoryAlreadyExists(
+            CategoryAlreadyExistsException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse<Map<String, String>> error =
+                ErrorResponse.<Map<String, String>>builder()
+                        .status(HttpStatus.CONFLICT.value())
+                        .error(HttpStatus.CONFLICT.getReasonPhrase())
+                        .message("Category Creation Failed")
+                        .path(request.getRequestURI())
+                        .data(Map.of("category", ex.getMessage()))
+                        .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handleCategoryNotFound(
+            CategoryNotFoundException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse<Map<String, String>> error =
+                ErrorResponse.<Map<String, String>>builder()
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                        .message("Category Not Found")
+                        .path(request.getRequestURI())
+                        .data(Map.of("category", ex.getMessage()))
+                        .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
 }

@@ -28,9 +28,6 @@ public class Product {
     @Column(nullable = false)
     private String brand;
 
-    @Column(nullable = false)
-    private String category;
-
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
@@ -47,6 +44,10 @@ public class Product {
     @Builder.Default
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @PreUpdate
     public void updateTimestamp() {
