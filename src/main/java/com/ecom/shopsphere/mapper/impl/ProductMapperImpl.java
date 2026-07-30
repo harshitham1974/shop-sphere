@@ -29,7 +29,7 @@ public class ProductMapperImpl implements ProductMapper {
     public ProductResponseDTO toResponse(Product product) {
 
         return ProductResponseDTO.builder()
-                .productId(product.getId())
+                .productId(product.getProductId())
                 .productName(product.getProductName())
                 .description(product.getDescription())
                 .brand(product.getBrand())

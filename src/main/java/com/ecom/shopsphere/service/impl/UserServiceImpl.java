@@ -5,15 +5,20 @@ import com.ecom.shopsphere.dto.request.LoginRequestDTO;
 import com.ecom.shopsphere.dto.request.RegisterRequestDTO;
 import com.ecom.shopsphere.dto.request.UpdateProfileRequestDTO;
 import com.ecom.shopsphere.dto.response.*;
+import com.ecom.shopsphere.entity.Cart;
 import com.ecom.shopsphere.entity.Role;
 import com.ecom.shopsphere.entity.User;
+import com.ecom.shopsphere.entity.Wishlist;
 import com.ecom.shopsphere.exception.EmailAlreadyExistsException;
 import com.ecom.shopsphere.exception.InvalidCredentialsException;
 import com.ecom.shopsphere.exception.PasswordChangeFailedException;
 import com.ecom.shopsphere.exception.UserNotFoundException;
 import com.ecom.shopsphere.mapper.UserMapper;
+import com.ecom.shopsphere.repository.CartRepository;
 import com.ecom.shopsphere.repository.UserRepository;
+import com.ecom.shopsphere.repository.WishlistRepository;
 import com.ecom.shopsphere.security.JwtService;
+import com.ecom.shopsphere.service.CurrentUserService;
 import com.ecom.shopsphere.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +39,12 @@ public class UserServiceImpl implements UserService {
     private final JwtService jwtService;
 
     private final UserMapper userMapper;
+
+    private final CurrentUserService currentUserService;
+
+    private final CartRepository cartRepository;
+
+    private final WishlistRepository wishlistRepository;
 
     @Override
     public RegisterResponseDTO registerUser(RegisterRequestDTO request) {
@@ -60,8 +71,30 @@ public class UserServiceImpl implements UserService {
 
         log.info(
                 "User registered successfully. User ID: {}, Email: {}",
-                savedUser.getId(),
+                savedUser.getUserId(),
                 savedUser.getEmail()
+        );
+
+        Cart cart = Cart.builder()
+                .user(savedUser)
+                .build();
+
+        cartRepository.save(cart);
+
+        log.info(
+                "Cart created successfully for user ID: {}",
+                savedUser.getUserId()
+        );
+
+        Wishlist wishlist = Wishlist.builder()
+                .user(savedUser)
+                .build();
+
+        wishlistRepository.save(wishlist);
+
+        log.info(
+                "Wishlist created successfully for user ID: {}",
+                savedUser.getUserId()
         );
 
         log.info("Registration process completed successfully for email: {}", savedUser.getEmail());
@@ -101,36 +134,12 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
-    private User getCurrentUser() {
-
-        Authentication authentication =
-                SecurityContextHolder
-                        .getContext()
-                        .getAuthentication();
-
-        String email = authentication.getName();
-
-        log.info("Logged-in user email: {}", email);
-
-//        User user = userRepository.findByEmail("dummy@gmail.com")
-//                .orElseThrow(() ->
-//                        new UserNotFoundException("User not found."));
-
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> {
-
-                    log.error("User not found: {}", email);
-
-                    return new UserNotFoundException("User not found.");
-                });
-    }
-
     @Override
     public ProfileResponseDTO getProfile() {
 
         log.info("Fetching logged-in user profile.");
 
-        User user = getCurrentUser();
+        User user = currentUserService.getCurrentUser();
 
         log.info("Profile fetched successfully: {}", user.getEmail());
 
@@ -142,7 +151,7 @@ public class UserServiceImpl implements UserService {
 
         log.info("Updating logged-in user profile.");
 
-        User user = getCurrentUser();
+        User user = currentUserService.getCurrentUser();
 
         userMapper.updateUserFromRequest(request, user);
 
@@ -159,7 +168,7 @@ public class UserServiceImpl implements UserService {
 
         log.info("Changing password for logged-in user.");
 
-        User user = getCurrentUser();
+        User user = currentUserService.getCurrentUser();
 
         log.info("Verifying current password for user: {}", user.getEmail());
 
@@ -203,7 +212,7 @@ public class UserServiceImpl implements UserService {
 
         log.info("Deleting logged-in user account.");
 
-        User user = getCurrentUser();
+        User user = currentUserService.getCurrentUser();
 
         log.info("Deleting account for user: {}", user.getEmail());
 
