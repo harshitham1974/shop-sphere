@@ -178,4 +178,44 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handleCartNotFound(
+            CartNotFoundException ex,
+            HttpServletRequest request) {
+
+        log.error("Cart not found: {}", ex.getMessage());
+
+        ErrorResponse<Map<String, String>> error = ErrorResponse.<Map<String, String>>builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                .message("Cart Not Found")
+                .data(Map.of("cart", ex.getMessage()))
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handleCartItemNotFound(
+            CartItemNotFoundException ex,
+            HttpServletRequest request) {
+
+        log.error("Cart item not found: {}", ex.getMessage());
+
+        ErrorResponse<Map<String, String>> error = ErrorResponse.<Map<String, String>>builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                .message("Cart Item Not Found")
+                .data(Map.of("cartItem", ex.getMessage()))
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
 }

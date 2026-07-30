@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
 
         log.info(
                 "Product created successfully. Product ID: {}, Product Name: {}",
-                savedProduct.getId(),
+                savedProduct.getProductId(),
                 savedProduct.getProductName()
         );
 
@@ -141,7 +141,7 @@ public class ProductServiceImpl implements ProductService {
 
         DeleteProductResponseDTO response =
                 DeleteProductResponseDTO.builder()
-                        .productId(product.getId())
+                        .productId(product.getProductId())
                         .productName(product.getProductName())
                         .state("DELETED")
                         .build();

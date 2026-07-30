@@ -24,7 +24,7 @@ public class UserMapperImpl implements UserMapper {
     @Override
     public RegisterResponseDTO toRegisterResponse(User user) {
         return RegisterResponseDTO.builder()
-                .userId(user.getId())
+                .userId(user.getUserId())
                 .fullName(user.getFullName())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
@@ -34,7 +34,7 @@ public class UserMapperImpl implements UserMapper {
     @Override
     public LoginResponseDTO toLoginResponse(User user) {
         return LoginResponseDTO.builder()
-                .userId(user.getId())
+                .userId(user.getUserId())
                 .fullName(user.getFullName())
                 .email(user.getEmail())
                 .build();
@@ -44,7 +44,7 @@ public class UserMapperImpl implements UserMapper {
     public ProfileResponseDTO toProfileResponse(User user) {
 
         return ProfileResponseDTO.builder()
-                .userId(user.getId())
+                .userId(user.getUserId())
                 .fullName(user.getFullName())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
