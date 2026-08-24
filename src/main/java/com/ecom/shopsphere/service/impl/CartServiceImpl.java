@@ -1,17 +1,9 @@
 package com.ecom.shopsphere.service.impl;
 
-import com.ecom.shopsphere.dto.response.DeleteAccountResponseDTO;
-import com.ecom.shopsphere.dto.response.DeleteCartResponseDTO;
-import com.ecom.shopsphere.service.CurrentUserService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ecom.shopsphere.dto.request.AddCartItemRequestDTO;
 import com.ecom.shopsphere.dto.request.UpdateCartItemRequestDTO;
 import com.ecom.shopsphere.dto.response.CartResponseDTO;
+import com.ecom.shopsphere.dto.response.DeleteCartResponseDTO;
 import com.ecom.shopsphere.entity.Cart;
 import com.ecom.shopsphere.entity.CartItem;
 import com.ecom.shopsphere.entity.Product;
@@ -19,13 +11,17 @@ import com.ecom.shopsphere.entity.User;
 import com.ecom.shopsphere.exception.CartItemNotFoundException;
 import com.ecom.shopsphere.exception.CartNotFoundException;
 import com.ecom.shopsphere.exception.ProductNotFoundException;
-import com.ecom.shopsphere.exception.UserNotFoundException;
 import com.ecom.shopsphere.mapper.CartMapper;
 import com.ecom.shopsphere.repository.CartItemRepository;
 import com.ecom.shopsphere.repository.CartRepository;
 import com.ecom.shopsphere.repository.ProductRepository;
 import com.ecom.shopsphere.repository.UserRepository;
 import com.ecom.shopsphere.service.CartService;
+import com.ecom.shopsphere.service.CurrentUserService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

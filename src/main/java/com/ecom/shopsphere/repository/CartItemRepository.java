@@ -1,11 +1,10 @@
 package com.ecom.shopsphere.repository;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.ecom.shopsphere.entity.CartItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ecom.shopsphere.entity.CartItem;
+import java.util.List;
+import java.util.Optional;
 
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 

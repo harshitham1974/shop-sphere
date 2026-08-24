@@ -1,12 +1,11 @@
 package com.ecom.shopsphere.mapper.impl;
 
-import com.ecom.shopsphere.mapper.CategoryMapper;
-import org.springframework.stereotype.Component;
-
 import com.ecom.shopsphere.dto.request.CreateCategoryRequestDTO;
 import com.ecom.shopsphere.dto.request.UpdateCategoryRequestDTO;
 import com.ecom.shopsphere.dto.response.CategoryResponseDTO;
 import com.ecom.shopsphere.entity.Category;
+import com.ecom.shopsphere.mapper.CategoryMapper;
+import org.springframework.stereotype.Component;
 
 @Component
 public class CategoryMapperImpl implements CategoryMapper {

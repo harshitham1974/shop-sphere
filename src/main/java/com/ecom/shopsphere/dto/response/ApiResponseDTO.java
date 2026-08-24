@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ApiResponse<T> {
+public class ApiResponseDTO<T> {
 
     @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now();

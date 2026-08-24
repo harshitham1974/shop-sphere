@@ -1,10 +1,9 @@
 package com.ecom.shopsphere.repository;
 
-import java.util.Optional;
-
+import com.ecom.shopsphere.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ecom.shopsphere.entity.Category;
+import java.util.Optional;
 
 public interface CategoryRepository
         extends JpaRepository<Category, Long> {

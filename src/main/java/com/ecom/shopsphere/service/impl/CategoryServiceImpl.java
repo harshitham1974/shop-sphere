@@ -1,10 +1,5 @@
 package com.ecom.shopsphere.service.impl;
 
-import java.util.List;
-
-import com.ecom.shopsphere.service.CategoryService;
-import org.springframework.stereotype.Service;
-
 import com.ecom.shopsphere.dto.request.CreateCategoryRequestDTO;
 import com.ecom.shopsphere.dto.request.UpdateCategoryRequestDTO;
 import com.ecom.shopsphere.dto.response.CategoryResponseDTO;
@@ -14,9 +9,12 @@ import com.ecom.shopsphere.exception.CategoryAlreadyExistsException;
 import com.ecom.shopsphere.exception.CategoryNotFoundException;
 import com.ecom.shopsphere.mapper.CategoryMapper;
 import com.ecom.shopsphere.repository.CategoryRepository;
-
+import com.ecom.shopsphere.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

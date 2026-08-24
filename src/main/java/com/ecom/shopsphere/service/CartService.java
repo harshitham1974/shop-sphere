@@ -7,7 +7,7 @@ import com.ecom.shopsphere.dto.response.DeleteCartResponseDTO;
 
 public interface CartService {
 
-    CartResponseDTO addToCart( AddCartItemRequestDTO request);
+    CartResponseDTO addToCart(AddCartItemRequestDTO request);
 
     CartResponseDTO getCart();
 

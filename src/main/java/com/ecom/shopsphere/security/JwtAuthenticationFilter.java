@@ -1,5 +1,6 @@
 package com.ecom.shopsphere.security;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +22,6 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -31,42 +31,69 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain)
             throws ServletException, IOException {
 
-        log.info("JWT Filter Executed");
+        String requestUri = request.getRequestURI();
+
+        log.info(
+                "JWT Filter -> {} {}",
+                request.getMethod(),
+                requestUri
+        );
 
         String authHeader = request.getHeader("Authorization");
 
-        log.info("Authorization Header: {}", authHeader);
-
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+
+            log.info("No Bearer token found");
+
             filterChain.doFilter(request, response);
             return;
         }
 
         String jwt = authHeader.substring(7);
 
-        log.info("JWT token received");
+        try {
 
-        String email = jwtService.extractEmail(jwt);
+            String email = jwtService.extractEmail(jwt);
 
-        log.info("Email extracted from JWT: {}", email);
+            log.info("JWT email: {}", email);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            if (email != null &&
+                    SecurityContextHolder.getContext().getAuthentication() == null) {
 
-        log.info("User loaded successfully: {}", userDetails.getUsername());
+                UserDetails userDetails =
+                        userDetailsService.loadUserByUsername(email);
 
-        if (jwtService.isTokenValid(jwt, userDetails)) {
+                if (jwtService.isTokenValid(jwt, userDetails)) {
 
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
+
+                    SecurityContextHolder
+                            .getContext()
+                            .setAuthentication(authentication);
+
+                    log.info(
+                            "Authenticated: {} | authorities: {}",
+                            email,
                             userDetails.getAuthorities()
                     );
+                }
+            }
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (JwtException | IllegalArgumentException e) {
 
-            log.info("User authenticated successfully: {}", email);
+            log.warn(
+                    "JWT authentication failed: {}",
+                    e.getMessage()
+            );
+
+            SecurityContextHolder.clearContext();
         }
+
         filterChain.doFilter(request, response);
     }
 }

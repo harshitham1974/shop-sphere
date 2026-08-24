@@ -8,10 +8,6 @@ import com.ecom.shopsphere.dto.response.*;
 
 public interface UserService {
 
-    RegisterResponseDTO registerUser(RegisterRequestDTO request);
-
-    LoginResponseDTO loginUser(LoginRequestDTO request);
-
     ProfileResponseDTO getProfile();
 
     ProfileResponseDTO updateProfile(UpdateProfileRequestDTO request);

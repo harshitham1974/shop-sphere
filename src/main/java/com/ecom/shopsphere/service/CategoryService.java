@@ -1,11 +1,11 @@
 package com.ecom.shopsphere.service;
 
-import java.util.List;
-
 import com.ecom.shopsphere.dto.request.CreateCategoryRequestDTO;
 import com.ecom.shopsphere.dto.request.UpdateCategoryRequestDTO;
 import com.ecom.shopsphere.dto.response.CategoryResponseDTO;
 import com.ecom.shopsphere.dto.response.DeleteCategoryResponseDTO;
+
+import java.util.List;
 
 public interface CategoryService {
 
