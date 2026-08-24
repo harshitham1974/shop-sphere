@@ -4,6 +4,6 @@ import com.ecom.shopsphere.entity.User;
 
 public interface CurrentUserService {
 
-        User getCurrentUser();
+    User getCurrentUser();
 
 }

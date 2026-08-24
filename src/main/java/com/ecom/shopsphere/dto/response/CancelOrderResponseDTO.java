@@ -7,7 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ChangePasswordResponseDTO {
+public class CancelOrderResponseDTO {
 
-    private String confirmation;
+    private String state;
+
 }

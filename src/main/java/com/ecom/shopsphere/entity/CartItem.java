@@ -1,9 +1,12 @@
 package com.ecom.shopsphere.entity;
 
-import java.math.BigDecimal;
-
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "cart_items")

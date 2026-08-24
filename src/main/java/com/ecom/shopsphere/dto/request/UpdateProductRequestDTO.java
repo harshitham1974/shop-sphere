@@ -24,7 +24,7 @@ public class UpdateProductRequestDTO {
     @NotBlank(message = "Brand is required.")
     private String brand;
 
-    @NotBlank(message = "Category is required.")
+    @NotNull(message = "Category is required.")
     private Long categoryId;
 
     @NotNull(message = "Price is required.")
