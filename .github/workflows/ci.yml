@@ -15,11 +15,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 26
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -27,7 +26,7 @@ jobs:
           cache: maven
 
       - name: Run tests
-        run: mvn clean test
+        run: ./mvnw clean verify
 
       - name: Build application
-        run: mvn clean package -DskipTests
+        run: ./mvnw clean package -DskipTests
