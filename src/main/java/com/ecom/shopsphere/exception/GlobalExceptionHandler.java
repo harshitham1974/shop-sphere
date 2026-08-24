@@ -9,7 +9,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -93,7 +92,7 @@ public class GlobalExceptionHandler {
         ErrorResponse<Map<String, String>> error = ErrorResponse.<Map<String, String>>builder()
                 .status(HttpStatus.NOT_FOUND.value())
                 .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-                .message("Profile Fetch Failed")
+                .message("User Not Found")
                 .data(Map.of("user", ex.getMessage()))
                 .path(request.getRequestURI())
                 .build();
@@ -216,6 +215,247 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(error);
+    }
+
+    @ExceptionHandler(WishlistNotFoundException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handleWishlistNotFound(
+            WishlistNotFoundException ex,
+            HttpServletRequest request) {
+
+        log.error("Wishlist not found: {}", ex.getMessage());
+
+        ErrorResponse<Map<String, String>> error =
+                ErrorResponse.<Map<String, String>>builder()
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                        .message("Wishlist Not Found")
+                        .data(Map.of("wishlist", ex.getMessage()))
+                        .path(request.getRequestURI())
+                        .build();
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
+    @ExceptionHandler(WishlistItemNotFoundException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handleWishlistItemNotFound(
+            WishlistItemNotFoundException ex,
+            HttpServletRequest request) {
+
+        log.error("Wishlist item not found: {}", ex.getMessage());
+
+        ErrorResponse<Map<String, String>> error =
+                ErrorResponse.<Map<String, String>>builder()
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                        .message("Wishlist Item Not Found")
+                        .data(Map.of("wishlistItem", ex.getMessage()))
+                        .path(request.getRequestURI())
+                        .build();
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
+    @ExceptionHandler(AddressNotFoundException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handleAddressNotFound(
+            AddressNotFoundException ex,
+            HttpServletRequest request) {
+
+        log.error("Address not found: {}", ex.getMessage());
+
+        ErrorResponse<Map<String, String>> error =
+                ErrorResponse.<Map<String, String>>builder()
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                        .message("Address Not Found")
+                        .data(Map.of("address", ex.getMessage()))
+                        .path(request.getRequestURI())
+                        .build();
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handleOrderNotFound(
+            OrderNotFoundException ex,
+            HttpServletRequest request) {
+
+
+        log.error("Order not found: {}", ex.getMessage());
+
+
+        ErrorResponse<Map<String, String>> error =
+                ErrorResponse.<Map<String, String>>builder()
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                        .message("Order Not Found")
+                        .data(Map.of("order", ex.getMessage()))
+                        .path(request.getRequestURI())
+                        .build();
+
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
+    @ExceptionHandler(OrderCancellationFailedException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handleOrderCancellationFailed(
+            OrderCancellationFailedException ex,
+            HttpServletRequest request) {
+
+
+        log.error("Order cancellation failed: {}", ex.getMessage());
+
+
+        ErrorResponse<Map<String, String>> error =
+                ErrorResponse.<Map<String, String>>builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                        .message("Order Cancellation Failed")
+                        .data(Map.of("order", ex.getMessage()))
+                        .path(request.getRequestURI())
+                        .build();
+
+
+        return ResponseEntity
+                .badRequest()
+                .body(error);
+    }
+
+    @ExceptionHandler(CartEmptyException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handleCartEmpty(
+            CartEmptyException ex,
+            HttpServletRequest request) {
+
+        log.error("Cart empty: {}", ex.getMessage());
+
+        ErrorResponse<Map<String, String>> error =
+                ErrorResponse.<Map<String, String>>builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                        .message("Cart Empty")
+                        .data(Map.of("cart", ex.getMessage()))
+                        .path(request.getRequestURI())
+                        .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(error);
+    }
+
+    @ExceptionHandler(PaymentFailedException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handlePaymentFailed(
+            PaymentFailedException ex,
+            HttpServletRequest request) {
+
+        log.error("Payment failed: {}", ex.getMessage());
+
+        ErrorResponse<Map<String, String>> error =
+                ErrorResponse.<Map<String, String>>builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                        .message("Payment Failed")
+                        .data(Map.of("payment", ex.getMessage()))
+                        .path(request.getRequestURI())
+                        .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(error);
+    }
+
+    @ExceptionHandler(PaymentNotFoundException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handlePaymentNotFound(
+            PaymentNotFoundException ex,
+            HttpServletRequest request) {
+
+        log.error("Payment not found: {}", ex.getMessage());
+
+        ErrorResponse<Map<String, String>> error =
+                ErrorResponse.<Map<String, String>>builder()
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                        .message("Payment Not Found")
+                        .data(Map.of("payment", ex.getMessage()))
+                        .path(request.getRequestURI())
+                        .build();
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
+    @ExceptionHandler(InvalidOrderStatusException.class)
+    public ResponseEntity<ErrorResponse<Map<String,String>>>
+    handleInvalidOrderStatus(
+            InvalidOrderStatusException ex,
+            HttpServletRequest request) {
+
+        log.error(
+                "Invalid order status: {}",
+                ex.getMessage());
+
+        ErrorResponse<Map<String,String>> error =
+                ErrorResponse.<Map<String,String>>builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                        .message("Invalid Order Status")
+                        .data(
+                                Map.of(
+                                        "order",
+                                        ex.getMessage()
+                                )
+                        )
+                        .path(request.getRequestURI())
+                        .build();
+
+        return ResponseEntity
+                .badRequest()
+                .body(error);
+    }
+
+    @ExceptionHandler(ReviewNotFoundException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handleReviewNotFound(
+            ReviewNotFoundException ex,
+            HttpServletRequest request) {
+
+        log.error("Review not found: {}", ex.getMessage());
+
+        ErrorResponse<Map<String, String>> error =
+                ErrorResponse.<Map<String, String>>builder()
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                        .message("Review Not Found")
+                        .path(request.getRequestURI())
+                        .data(Map.of("review", ex.getMessage()))
+                        .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(ReviewAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handleReviewAlreadyExists(
+            ReviewAlreadyExistsException ex,
+            HttpServletRequest request) {
+
+        log.error("Review already exists: {}", ex.getMessage());
+
+        ErrorResponse<Map<String, String>> error =
+                ErrorResponse.<Map<String, String>>builder()
+                        .status(HttpStatus.CONFLICT.value())
+                        .error(HttpStatus.CONFLICT.getReasonPhrase())
+                        .message("Review Already Exists")
+                        .path(request.getRequestURI())
+                        .data(Map.of("review", ex.getMessage()))
+                        .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
 }
