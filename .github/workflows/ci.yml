@@ -26,6 +26,9 @@ jobs:
           java-version: '21'
           cache: maven
 
+      - name: Build and test
+        run: ./mvnw clean verify -e
+
       - name: Run tests
         run: mvn clean test
 
