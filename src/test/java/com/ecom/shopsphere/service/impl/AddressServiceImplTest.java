@@ -550,8 +550,8 @@ class AddressServiceImplTest {
         when(currentUserService.getCurrentUser()).thenReturn(user);
         when(addressRepository.findByAddressIdAndUserUserId(addressId, 1L)).thenReturn(Optional.of(address));
         when(addressRepository.findByUserUserIdAndDefaultAddressTrue(1L)).thenReturn(Optional.of(existingDefault));
-        when(addressRepository.save(any(Address.class))).thenAnswer(invocation ->
-                invocation.getArgument(0));
+        when(addressRepository.save(existingDefault)).thenReturn(existingDefault);
+        when(addressRepository.save(address)).thenReturn(savedAddress);
         when(addressMapper.toResponse(savedAddress)).thenReturn(response);
 
         AddressResponseDTO result = addressService.setDefaultAddress(addressId);
