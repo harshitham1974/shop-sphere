@@ -40,9 +40,11 @@ public abstract class BaseIntegrationTest {
     @Autowired private ProductRepository productRepository;
     @Autowired private CategoryRepository categoryRepository;
     @Autowired private UserRepository userRepository;
+    @Autowired private PaymentRepository paymentRepository ;
 
     @BeforeEach
     void cleanDatabase() {
+        paymentRepository.deleteAllInBatch();
         orderItemRepository.deleteAllInBatch();
         orderRepository.deleteAllInBatch();
         cartItemRepository.deleteAllInBatch();
