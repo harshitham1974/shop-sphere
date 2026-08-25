@@ -2,6 +2,7 @@ package com.ecom.shopsphere.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SoftDelete;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @ToString(exclude = "password")
+@SoftDelete(columnName = "deleted")
 public class User {
 
     @Id
@@ -48,13 +50,14 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Wishlist wishlist;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    // orders/addresses/reviews are historical records — don't cascade-delete them
+    @OneToMany(mappedBy = "user")
     private List<Address> addresses;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<Review> reviews;
 
     @PrePersist
