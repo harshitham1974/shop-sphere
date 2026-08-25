@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -41,6 +42,7 @@ public abstract class BaseIntegrationTest {
     @Autowired private CategoryRepository categoryRepository;
     @Autowired private UserRepository userRepository;
     @Autowired private PaymentRepository paymentRepository ;
+    @Autowired private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void cleanDatabase() {
@@ -55,6 +57,7 @@ public abstract class BaseIntegrationTest {
         addressRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
         categoryRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
+//        userRepository.deleteAllInBatch();
+        jdbcTemplate.update("DELETE FROM users");
     }
 }
