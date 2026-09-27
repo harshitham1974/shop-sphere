@@ -22,11 +22,13 @@ WORKDIR /app
 
 # Create a non-root user
 RUN addgroup --system spring && adduser --system --ingroup spring spring
-USER spring:spring
+
+# Create logs directory and give ownership to spring user
+RUN mkdir -p /app/logs && chown -R spring:spring /app/logs
 
 COPY --from=build /app/target/*.jar app.jar
 
-RUN mkdir -p /app/logs && chown -R spring:spring /app/logs
+USER spring:spring
 
 EXPOSE 8080
 
