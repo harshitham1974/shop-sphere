@@ -26,6 +26,8 @@ USER spring:spring
 
 COPY --from=build /app/target/*.jar app.jar
 
+RUN mkdir -p /app/logs && chown -R spring:spring /app/logs
+
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
