@@ -48,6 +48,12 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/v1/admin/**"
                         ).hasRole("ADMIN")
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/api/v1/shopSphere/health"
+                        ).permitAll()
 
                         .requestMatchers("/api/v1/auth/**")
                         .permitAll()
