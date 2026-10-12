@@ -7,110 +7,174 @@
 Live demo: (https://shop-sphere-5sgv.onrender.com/swagger-ui/index.html) 
 Note: hosted on Render's free tier, so the first request after a period of inactivity can take about a minute while the service wakes up.
 
+# ShopSphere
 
-A modern e‑commerce platform built from scratch using industry-standard practices. Shop Sphere aims to provide a modular, extensible, and secure foundation for online stores.
-
-## Table of Contents
-- About
-- Features
-- Tech stack
-- Getting started
-  - Prerequisites
-  - Build (Maven & Gradle)
-  - Run locally
-  - Docker
-- Running tests
-- Environment variables
-- Project structure
-- Contributing
-- Code of Conduct
-- Security
-- License
-
-## About
-Shop Sphere is designed to be a production-ready e-commerce backend with modular services, secure auth, product/catalog management, checkout, and integrations for payments and shipping.
+A modular Spring Boot e-commerce backend providing user accounts, catalog management, cart and checkout, orders, payments, and secure JWT-protected APIs. ShopSphere is designed as a reusable foundation for online stores, with PostgreSQL persistence and a Dockerized local setup.
 
 ## Features
-- User accounts (registration, login, roles)
-- Product catalog with categories and tags
-- Shopping cart and checkout flow
-- Order management and history
-- Admin dashboard (planned)
-- RESTful JSON APIs, with OpenAPI/Swagger (planned)
-- Dockerized for easy deployment
 
-## Tech stack
-- Java (>=17 recommended)
-- Spring Boot (suggested)
-- JPA / Hibernate
-- PostgreSQL (recommended)
-- Docker / Docker Compose
-- GitHub Actions for CI
+- **Authentication and authorization**: registration and login with JWT bearer tokens, role-based access (customer and admin)
+- **User management**: profile, update profile, change password, delete account
+- **Addresses**: full CRUD plus default-address selection
+- **Catalog**: products and categories, with public read access and protected write operations
+- **Reviews**: create, read, update, and delete product reviews, plus "my reviews"
+- **Cart**: add, update, and remove items, or clear the cart
+- **Orders**: place orders, view history, cancel orders
+- **Payments**: create payments and look up payments by order
+- **Wishlist**: add, view, and remove wishlist items
+- **Admin dashboard**: order dashboard and order lifecycle management (confirm, processing, ship, deliver)
+- **API docs**: interactive Swagger UI via Springdoc OpenAPI
+- **Cross-cutting concerns**: centralized exception handling and AOP-based logging
 
-## Getting started
+## Tech Stack
+
+| Area | Technology |
+| --- | --- |
+| Language | Java 25 |
+| Framework | Spring Boot 4.1.0 |
+| Persistence | Spring Data JPA, PostgreSQL |
+| Security | Spring Security, JWT (JJWT) |
+| API docs | Springdoc OpenAPI |
+| Testing | JUnit, Spring test support, Testcontainers |
+| Build and tooling | Maven (wrapper included), Docker, Docker Compose, GitHub Actions, Qodana |
+
+## Project Structure
+
+```
+.
+├── .github/                  CI workflows, issue and PR templates
+├── src/
+│   ├── main/
+│   │   ├── java/com/ecom/shopsphere/
+│   │   │   ├── aspect/       AOP logging
+│   │   │   ├── config/       Security and OpenAPI configuration
+│   │   │   ├── controller/   REST controllers
+│   │   │   ├── dto/          Request and response DTOs
+│   │   │   ├── entity/       JPA domain model
+│   │   │   ├── exception/    Custom exceptions and global handler
+│   │   │   ├── mapper/       Entity <-> DTO mappers
+│   │   │   ├── repository/   Spring Data repositories
+│   │   │   ├── security/     JWT filter, service, user details
+│   │   │   ├── service/      Business logic (interfaces + impls)
+│   │   │   └── ShopsphereApplication.java
+│   │   └── resources/        Application configuration
+│   └── test/                 Unit and integration tests
+├── Dockerfile
+├── docker-compose.yml        App + PostgreSQL
+├── pom.xml
+└── mvnw / mvnw.cmd
+```
+
+## Architecture
+
+Requests follow a layered flow:
+
+```
+Client -> Controller -> Security (JWT filter) -> Service -> Repository -> PostgreSQL
+                                   \-> Mapper (Entity <-> DTO)
+```
+
+- **Controllers** expose the REST API and handle validation and responses.
+- **Security** authenticates each request via `JwtAuthenticationFilter` and authorizes access.
+- **Services** hold business rules and transactional flows.
+- **Repositories** persist JPA entities to PostgreSQL.
+- **Mappers and DTOs** keep the API contract separate from the domain model.
+
+### Domain model
+
+User, Role, Address, Category, Product, Review, Cart, CartItem, Wishlist, WishlistItem, Order, OrderItem, OrderStatus, Payment, PaymentMethod, PaymentStatus.
+
+## Getting Started
 
 ### Prerequisites
-- JDK 17+
-- Maven 3.6+ or Gradle 7+
-- Docker (for container usage)
-- Git
 
-### Clone the repo
+- Java 25
+- Maven (or use the included wrapper)
+- PostgreSQL, or Docker and Docker Compose
+
+### Clone
+
+```bash
 git clone https://github.com/harshitham1974/shop-sphere.git
 cd shop-sphere
+```
 
-### Build
+### Configuration
 
-Maven:
-mvn clean package -DskipTests
+Copy the example environment file and set your database and JWT values:
 
-Gradle:
-./gradlew clean build -x test
+```bash
+cp .env.example .env
+```
 
-(If you use Maven, the packaged jar will typically be in `target/`. For Gradle, it will be in `build/libs/`.)
+Use `.env.docker` for the Docker Compose setup. At minimum, configure the database connection and the JWT secret.
 
-### Run locally (jar)
-java -jar target/shop-sphere-0.0.1-SNAPSHOT.jar
-# or for Gradle build
-java -jar build/libs/shop-sphere-0.0.1-SNAPSHOT.jar
+### Run locally
 
-By default the app listens on port 8080. Configure via `application.properties` or environment variables.
+```bash
+./mvnw clean package -DskipTests
+java -jar target/*.jar
+```
 
-### Docker (build & run)
-Build:
-docker build -t shop-sphere:latest .
+### Run with Docker Compose
 
-Run:
-docker run -p 8080:8080 --env-file .env.example shop-sphere:latest
+```bash
+docker-compose up --build
+```
 
-### Docker Compose (example)
-Create a `docker-compose.yml` to run app + postgres for local development. Use `.env.example` as a starting point.
+This starts the application along with a local PostgreSQL instance.
 
-## Running tests
-Maven:
-mvn test
+## API Documentation
 
-Gradle:
-./gradlew test
+With the app running, open the Swagger UI provided by Springdoc OpenAPI (typically `http://localhost:8080/swagger-ui.html`; adjust host and port to your configuration).
 
-## Environment variables
-See `.env.example` for required environment variables (DB connection, JWT secret, etc.). For production, use a secure secrets provider.
+## API Overview
 
-## Project structure (suggested)
-- src/main/java — application code
-- src/main/resources — configuration
-- src/test — tests
-- docs/ — documentation
-- infra/ — docker-compose, k8s manifests, etc.
+All endpoints are prefixed with `/api/v1`. Protected endpoints require the header `Authorization: Bearer <token>`.
+
+### Public
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/shopsphere/health` | Health check |
+| POST | `/auth/register` | Register a new user |
+| POST | `/auth/login` | Log in and receive a JWT |
+| GET | `/products`, `/products/{productId}` | Browse products |
+| GET | `/categories`, `/categories/{categoryId}` | Browse categories |
+
+### Protected
+
+| Area | Endpoints |
+| --- | --- |
+| Users | `GET /users/profile`, `PUT /users/update-profile`, `PUT /users/change-password`, `DELETE /users/delete-account` |
+| Addresses | `POST /addresses`, `GET /addresses`, `GET /addresses/{addressId}`, `PUT /addresses/{addressId}`, `DELETE /addresses/{addressId}`, `PATCH /addresses/{addressId}/default` |
+| Categories | `POST /categories`, `PUT /categories/{categoryId}`, `DELETE /categories/{categoryId}` |
+| Products | `POST /products`, `PUT /products/{productId}`, `DELETE /products/{productId}` |
+| Reviews | `POST /reviews`, `GET /reviews/{reviewId}`, `GET /reviews/product/{productId}`, `GET /reviews/my-reviews`, `PUT /reviews/{reviewId}`, `DELETE /reviews/{reviewId}` |
+| Cart | `POST /cart/items`, `GET /cart`, `PUT /cart/items/{cartItemId}`, `DELETE /cart/items/{cartItemId}`, `DELETE /cart` |
+| Orders | `POST /orders`, `GET /orders`, `GET /orders/{orderId}`, `PATCH /orders/{orderId}/cancel` |
+| Payments | `POST /payments`, `GET /payments/order/{orderId}` |
+| Wishlist | `POST /wishlist/items`, `GET /wishlist`, `DELETE /wishlist/items/{wishlistItemId}` |
+| Admin | `GET /admin/orders/dashboard`, `GET /admin/orders`, `GET /admin/orders/{orderId}`, `PATCH /admin/orders/{orderId}/confirm`, `/processing`, `/ship`, `/deliver` |
+
+## Testing
+
+The project includes controller unit tests, service unit tests, and integration tests (using Testcontainers with PostgreSQL).
+
+```bash
+./mvnw test
+```
+
+Docker must be running for the integration tests.
+
+## CI
+
+GitHub Actions workflows run the build and tests (`ci.yml`) and Qodana code-quality analysis (`qodana_code_quality.yml`).
 
 ## Contributing
-We welcome contributions! See CONTRIBUTING.md for guidelines on how to contribute, tests to run, commit style, and how to open PRs.
 
-## Code of Conduct
-Please follow the CODE_OF_CONDUCT.md file. Be respectful and inclusive.
-
-## Security
-If you discover a security vulnerability, please report it privately via the repository's security contact or email.
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before opening an issue or pull request.
 
 ## License
-This project is licensed under the MIT License — see the LICENSE file for details.
+
+See the [License](License) file for details.
